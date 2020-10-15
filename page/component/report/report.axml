@@ -1,5 +1,13 @@
 <view class="page">
-  <view class="page-description" style="text-align: center; margin-top: 200px;">
-    我是一个新的页面
-  </view>
+  <view class="page-section">
+    <view class="form-row">
+      <view class="form-row-label">项目号</view>
+      <view class="form-row-content">
+        <input class="input" disabled="{{confirm}}" onInput="onCodeInput" placeholder="输入6位数字" />
+      </view>
+    </view>
+    <view class="page-section-btns">
+      <button size="mini" type="primary" disabled="{{confirm}}" onTap="onCodeConfirm">确认</button>
+      <button size="mini" type="primary" disabled="{{!confirm}}" onTap="onCodeRewrite">重输</button>
+    </view>
 </view>
