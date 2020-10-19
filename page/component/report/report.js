@@ -7,6 +7,7 @@ Page({
     common_duration: '',
     common_start: '',
     common_end: '',
+    chosen: {},
   },
   onLoad(){
     let today = moment().format('YYYY-MM-DD');
@@ -94,9 +95,18 @@ Page({
       currentDate: self.data.common_start,
       success: (res) => {
         console.log(res);
-        self.setData({
-          common_start : res.date,
-        })
+        if(e.target.dataset.id == undefined){
+          self.setData({
+            common_start : res.date,
+          });
+        }
+        else{
+          let chosen = self.data.chosen;
+          chosen[e.target.dataset.id].start = res.date;
+          self.setData({
+            chosen:chosen
+          });
+        }
       },
     });
   },
@@ -108,10 +118,69 @@ Page({
       currentDate: self.data.common_end,
       success: (res) => {
         console.log(res);
-        self.setData({
-          common_end : res.date,
-        })
+        if(e.target.dataset.id == undefined){
+          self.setData({
+            common_end : res.date,
+          });
+        }
+        else{
+          let chosen = self.data.chosen;
+          chosen[e.target.dataset.id].end = res.date;
+          self.setData({
+            chosen:chosen
+          });
+        }
       },
     });
   },
+  onAddWorkers(e){
+    let self = this;
+    dd.complexChoose({
+      title:"选取作业人员",            //标题
+      multiple:true,            //是否多选
+      limitTips:"超出了限定人数",          //超过限定人数返回提示
+      maxUsers:1000,            //最大可选人数
+      pickedUsers:[],            //已选用户
+      pickedDepartments:[],          //已选部门
+      disabledUsers:[],            //不可选用户
+      disabledDepartments:[],        //不可选部门
+      requiredUsers:[],            //必选用户（不可取消选中状态）
+      requiredDepartments:[],        //必选部门（不可取消选中状态）
+      permissionType:"GLOBAL",          //可添加权限校验，选人权限，目前只有GLOBAL这个参数
+      responseUserOnly:true,    
+      success: (res)=>{
+        console.log('complexChoose success');
+        console.log('22222222');
+        console.log(res);
+        //let chosen = {};
+        let chosen = {123123 : {
+          name:'黄伏辉',
+          userid:123123,
+          start:self.data.common_start,
+          end:self.data.common_end
+        }};
+        console.log(res.users.length);
+        for(let i=0;i< res.users.length;i++){
+          let name = res.users[i].name;
+          let userid = res.users[i].userId;
+          console.log(name);
+          // chosen[userid] = {
+          //   name:name,
+          //   userid:userid,
+          //   start:self.data.common_start,
+          //   end:self.data.common_end,
+          // };
+        }
+        self.setData({
+            chosen:chosen
+        });
+        console.log('self.data.chosen:');
+        console.log(self.data.chosen);
+      },
+      fail: (res)=>{
+        console.log('complexChoose fail');
+        console.log(res);
+      },
+    });
+  }
 });

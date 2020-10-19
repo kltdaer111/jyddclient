@@ -13,11 +13,34 @@
   </view>
   <view class="page-section">
     <view class="text-view">
-      <text>工作时间: {{common_start}} 至 {{common_end}}</text>
+      <text>施工时间: {{common_start}} 至 {{common_end}}</text>
     </view>
     <view class="page-section-btns">
       <button size="mini" type="primary" onTap="onChooseStartTime">开始时间</button>
       <button size="mini" type="primary" onTap="onChooseEndTime">结束时间</button>
     </view>
   </view>
+
+
+
+  <view class="page-section">
+
+    <block a:for="{{chosen}}">
+    <view class="text-view">
+      <text>{{item.name}}: {{item.start}} 至 {{item.end}}</text>
+    </view>
+    <view class="page-section-btns">
+      <button size="mini" type="primary" data-id="{{index}}" onTap="onChooseStartTime">开始时间</button>
+      <button size="mini" type="primary" data-id="{{index}}" onTap="onChooseEndTime">结束时间</button>
+    </view>
+    </block>
+
+    <view class="text-view">
+      <text>点击按钮添加作业人员</text>
+    </view>
+    <view class="page-section-btns">
+      <button size="mini" onTap="onAddWorkers">+</button>
+    </view>
+  </view>
+
 </view>
