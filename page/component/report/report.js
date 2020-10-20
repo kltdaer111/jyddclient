@@ -135,12 +135,17 @@ Page({
   },
   onAddWorkers(e){
     let self = this;
+    let picked = [];
+    for(let i in self.data.chosen){
+      //console.log(i);
+      picked.push(i);
+    }
     dd.complexChoose({
       title:"选取作业人员",            //标题
       multiple:true,            //是否多选
       limitTips:"超出了限定人数",          //超过限定人数返回提示
       maxUsers:1000,            //最大可选人数
-      pickedUsers:[],            //已选用户
+      pickedUsers:picked,            //已选用户
       pickedDepartments:[],          //已选部门
       disabledUsers:[],            //不可选用户
       disabledDepartments:[],        //不可选部门
@@ -150,29 +155,22 @@ Page({
       responseUserOnly:true,    
       success: (res)=>{
         console.log('complexChoose success');
-        console.log('22222222');
         console.log(res);
-        //let chosen = {};
-        let chosen = {123123 : {
-          name:'黄伏辉',
-          userid:123123,
-          start:self.data.common_start,
-          end:self.data.common_end
-        }};
+        let tmp = {};
         console.log(res.users.length);
         for(let i=0;i< res.users.length;i++){
           let name = res.users[i].name;
           let userid = res.users[i].userId;
           console.log(name);
-          // chosen[userid] = {
-          //   name:name,
-          //   userid:userid,
-          //   start:self.data.common_start,
-          //   end:self.data.common_end,
-          // };
+          tmp[userid] = {
+            name:name,
+            userid:userid,
+            start:self.data.common_start,
+            end:self.data.common_end,
+          };
         }
         self.setData({
-            chosen:chosen
+            chosen:tmp
         });
         console.log('self.data.chosen:');
         console.log(self.data.chosen);
@@ -183,4 +181,5 @@ Page({
       },
     });
   }
+  //TODO 提交(时间检查,cofirm,)
 });
