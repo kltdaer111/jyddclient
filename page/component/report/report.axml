@@ -1,27 +1,31 @@
 <view class="page">
   <view class="page-section">
-    <view class="form-row">
-      <view class="form-row-label">项目号</view>
-      <view class="form-row-content">
-        <input class="input" disabled="{{confirm}}" onInput="onCodeInput" placeholder="输入6位数字"></input>
-      </view>
-    </view>
-    <view class="page-section-btns">
-      <button size="mini" type="primary" disabled="{{confirm}}" onTap="onCodeConfirm">确认</button>
-      <button size="mini" type="primary" disabled="{{!confirm}}" onTap="onCodeRewrite">重输</button>
-    </view>
-  </view>
-  <view class="page-section">
-    <view class="text-view">
-      <text>施工时间: {{common_start}} 至 {{common_end}}</text>
-    </view>
-    <view class="page-section-btns">
-      <button size="mini" type="primary" onTap="onChooseStartTime">开始时间</button>
-      <button size="mini" type="primary" onTap="onChooseEndTime">结束时间</button>
-    </view>
-  </view>
+    <view class="page-section-title">时间段: {{common_start}} 至 {{common_end}}</view>
 
-
+    <view class="page-section-btns">
+      <button size="mini" type="primary" onTap="onChooseStartTime">修改开始时间</button>
+      <button size="mini" type="primary" onTap="onChooseEndTime">修改结束时间</button>
+    </view>
+    <view class="page-section-title">工作内容</view>
+    <view class="page-section-btns">
+      <radio-group name="radio-group">
+        <view class="form-row">
+          <label><radio value="1"/>项目竞标</label>
+        </view>
+        <view class="form-row">
+          <label><radio value="2"/>项目施工</label>
+          <button size="mini" onTap="onAddWorkers" disabled="{{true}}">明细</button>
+        </view>
+        <view class="form-row">
+          <label><radio value="3"/>工作总结、环境整理</label>
+        </view>
+        <view class="form-row">
+          <label><radio value="4"/>公司其它安排(培训、学习、考试等)</label>
+        </view>
+      </radio-group>
+    </view>
+    
+  </view>
 
   <view class="page-section">
 
@@ -30,14 +34,13 @@
       <text>{{item.name}}: {{item.start}} 至 {{item.end}}</text>
     </view>
     <view class="page-section-btns">
-      <button size="mini" type="primary" data-id="{{index}}" onTap="onChooseStartTime">开始时间</button>
-      <button size="mini" type="primary" data-id="{{index}}" onTap="onChooseEndTime">结束时间</button>
+      <button size="mini" type="primary" data-id="{{index}}" onTap="onChooseStartTime">修改开始时间</button>
+      <button size="mini" type="primary" data-id="{{index}}" onTap="onChooseEndTime">修改结束时间</button>
     </view>
     </block>
 
-    <view class="text-view">
-      <text>点击按钮添加作业人员</text>
-    </view>
+    <view class="page-section-title">点击按钮添加工作内容</view>
+
     <view class="page-section-btns">
       <button size="mini" onTap="onAddWorkers">+</button>
     </view>
