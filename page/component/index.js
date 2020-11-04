@@ -27,7 +27,7 @@ Page({
       list: [
         {
           icon: '/image/form.png',
-          title: '工地日志',
+          title: '工作日志',
           entitle: 'report',
           page: 'report',
         }

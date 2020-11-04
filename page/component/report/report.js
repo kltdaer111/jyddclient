@@ -7,11 +7,8 @@ Page({
     common_duration: '',
     common_start: '',
     common_end: '',
-    chosen: {},
-    radiositems: [
-      {name:'1', value:'施工'},
-      {name:'2', value:'其它'}
-    ],
+    section: [],
+
   },
   onLoad(){
     dd.getAuthCode({
@@ -27,9 +24,21 @@ Page({
     let today = moment().format('YYYY-MM-DD');
     let common_start = today + ' 08:00';
     let common_end = today + ' 17:00';
+    let tmp = [];
+    tmp.push({
+      start: common_start,
+      end: common_end,
+      cons_checked: false,
+      detail: {
+        section_id: 0,
+        first_open: true,
+      }
+    });
     this.setData({
       common_start: common_start,
-      common_end: common_end
+      common_end: common_end,
+      section: tmp,
+      
     });
   },
   onChooseStartTime(e){
@@ -40,18 +49,11 @@ Page({
       currentDate: self.data.common_start,
       success: (res) => {
         console.log(res);
-        if(e.target.dataset.id == undefined){
-          self.setData({
-            common_start : res.date,
-          });
-        }
-        else{
-          let chosen = self.data.chosen;
-          chosen[e.target.dataset.id].start = res.date;
-          self.setData({
-            chosen:chosen
-          });
-        }
+        let tmp = [...this.data.section];
+        tmp[e.target.dataset.id].start = res.date
+        self.setData({
+          section: tmp
+        });
       },
     });
   },
@@ -63,19 +65,48 @@ Page({
       currentDate: self.data.common_end,
       success: (res) => {
         console.log(res);
-        if(e.target.dataset.id == undefined){
-          self.setData({
-            common_end : res.date,
-          });
-        }
-        else{
-          let chosen = self.data.chosen;
-          chosen[e.target.dataset.id].end = res.date;
-          self.setData({
-            chosen:chosen
-          });
-        }
+        let tmp = [...this.data.section];
+        tmp[e.target.dataset.id].end = res.date
+        self.setData({
+          section: tmp
+        });
       },
     });
   },
+  radioChange(e){
+    console.log(e);
+    let tmp = [...this.data.section];
+    if(e.detail.value == '2'){
+      tmp[e.target.dataset.id]['cons_checked'] = true;
+    }else{
+      tmp[e.target.dataset.id]['cons_checked'] = false;
+    }
+    this.setData({
+      section:tmp
+    })
+  },
+  onConsDetail(e){
+    console.log(e);
+    
+    dd.navigateTo({
+      url: './construction?obj=' + JSON.stringify(this.data.section[e.target.dataset.id]),
+    })
+  },
+  onAddSection(e){
+    console.log(e);
+    let tmp = [...this.data.section];
+    let index = tmp.length;
+    tmp.push({
+      start: this.data.common_start,
+      end: this.data.common_end,
+      cons_checked: false,
+      detail: {
+        section_id: index,
+        first_open: true,
+      }
+    });
+    this.setData({
+      section:tmp
+    });
+  }
 });

@@ -30,6 +30,7 @@
     "page/component/toast/toast",
     "page/component/view/view",
     "page/component/report/report",
+    "page/component/report/construction",
     "page/API/index/index",
     "page/API/share/share",
     "page/API/action-sheet/action-sheet",

@@ -1,22 +1,72 @@
 const moment = require('moment');
 
+//TODO 修改时间的统一
+
+const PLACE_HOLDER = '请输入6位数字';
+
 Page({
   data: {
     pcode: '',
+    value: '',
     confirm: false,
     common_duration: '',
     common_start: '',
     common_end: '',
+    section_id: 0,
+    place_holder: PLACE_HOLDER,
+    first_open: true,
     chosen: {},
+    myinfo: {},
   },
-  onLoad(){
-    let today = moment().format('YYYY-MM-DD');
-    let common_start = today + ' 08:00';
-    let common_end = today + ' 17:00';
+  onLoad(query){
+    let written = JSON.parse(query.obj);
+    console.log(written);
     this.setData({
-      common_start: common_start,
-      common_end: common_end
+      section_id: written.detail.section_id,
+      common_start: written.start,
+      common_end: written.end,
     });
+    if(written.detail.first_open == false){
+      console.log(written);
+      this.setData({
+        pcode: written.detail.pcode,
+        confirm: written.detail.confirm,
+        common_duration: written.detail.common_duration,
+        chosen: {...written.detail.chosen},
+        first_open: written.detail.first_open,
+        value: written.detail.pcode,
+        myinfo: {...written.myinfo}
+      });
+    }else{
+      // let today = moment().format('YYYY-MM-DD');
+      // let common_start = today + ' 08:00';
+      // let common_end = today + ' 17:00';
+      //将自己作为已选择的作业人员
+      let self = this;
+      dd.getStorage({
+        key: 'myinfo',
+        success: function(res){
+          let myinfo = res.data;
+          let chosen = {};
+          chosen[myinfo.userid] = {
+            start: self.data.common_start,
+            end: self.data.common_end,
+            name: myinfo.name,
+            userid: myinfo.userid
+          };
+          self.setData({
+            first_open: false,
+            chosen: {...chosen},
+            myinfo: {...myinfo}
+          });
+        },
+        fail: (res)=>{
+          console.log(res);
+          dd.alert({content: res.errorMessage});
+        }
+      });
+      
+    }
   },
   onCodeInput(e){
     console.log(e.detail.value);
@@ -84,7 +134,7 @@ Page({
   },
   onCodeRewrite(){
     this.setData({
-      confirm : false
+      confirm : false,
     });
   },
   onChooseStartTime(e){
@@ -135,28 +185,27 @@ Page({
   },
   onAddWorkers(e){
     let self = this;
-    let picked = [];
+    let requiredUsers = [];
     for(let i in self.data.chosen){
-      //console.log(i);
-      picked.push(i);
+     requiredUsers.push(i);
     }
     dd.complexChoose({
       title:"选取作业人员",            //标题
       multiple:true,            //是否多选
       limitTips:"超出了限定人数",          //超过限定人数返回提示
       maxUsers:1000,            //最大可选人数
-      pickedUsers:picked,            //已选用户
+      pickedUsers:[],            //已选用户
       pickedDepartments:[],          //已选部门
       disabledUsers:[],            //不可选用户
       disabledDepartments:[],        //不可选部门
-      requiredUsers:[],            //必选用户（不可取消选中状态）
+      requiredUsers:requiredUsers,            //必选用户（不可取消选中状态）
       requiredDepartments:[],        //必选部门（不可取消选中状态）
       permissionType:"GLOBAL",          //可添加权限校验，选人权限，目前只有GLOBAL这个参数
       responseUserOnly:true,    
       success: (res)=>{
         console.log('complexChoose success');
         console.log(res);
-        let tmp = {};
+        let tmp = {...self.data.chosen};
         console.log(res.users.length);
         for(let i=0;i< res.users.length;i++){
           let name = res.users[i].name;
@@ -180,6 +229,22 @@ Page({
         console.log(res);
       },
     });
-  }
+  },
+  onBack(){
+    let pages = getCurrentPages();
+    let prev_page = pages[pages.length - 2];
+    let section = [...prev_page.data.section];
+    console.log(prev_page.data.section);
+    console.log(pages);
+    console.log(this.data.section_id);
+    console.log(section);
+    section[this.data.section_id]['detail'] = {...this.data};
+    prev_page.setData({
+      section:section
+    });
+    dd.navigateBack({
+      delta: 1
+    });
+  },
   //TODO 提交(时间检查,cofirm,)
 });
