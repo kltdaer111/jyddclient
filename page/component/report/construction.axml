@@ -33,7 +33,7 @@
 
   <view class="page-section">
     <button type="ghost" onTap="onBack">保存并返回</button>
-    <button type="ghost" onTap="">重置</button>
+    <button type="ghost" onTap="onReload">重置作业人员</button>
   </view>
 
 </view>

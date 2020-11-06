@@ -18,6 +18,31 @@ Page({
     chosen: {},
     myinfo: {},
   },
+  initData(){
+    let self = this;
+    dd.getStorage({
+      key: 'myinfo',
+      success: function(res){
+        let myinfo = res.data;
+        let chosen = {};
+        chosen[myinfo.userid] = {
+          start: self.data.common_start,
+          end: self.data.common_end,
+          name: myinfo.name,
+          userid: myinfo.userid
+        };
+        self.setData({
+          first_open: false,
+          chosen: {...chosen},
+          myinfo: {...myinfo}
+        });
+      },
+      fail: (res)=>{
+        console.log(res);
+        dd.alert({content: res.errorMessage});
+      }
+    });
+  },
   onLoad(query){
     let written = JSON.parse(query.obj);
     console.log(written);
@@ -31,7 +56,6 @@ Page({
       this.setData({
         pcode: written.detail.pcode,
         confirm: written.detail.confirm,
-        common_duration: written.detail.common_duration,
         chosen: {...written.detail.chosen},
         first_open: written.detail.first_open,
         value: written.detail.pcode,
@@ -42,30 +66,7 @@ Page({
       // let common_start = today + ' 08:00';
       // let common_end = today + ' 17:00';
       //将自己作为已选择的作业人员
-      let self = this;
-      dd.getStorage({
-        key: 'myinfo',
-        success: function(res){
-          let myinfo = res.data;
-          let chosen = {};
-          chosen[myinfo.userid] = {
-            start: self.data.common_start,
-            end: self.data.common_end,
-            name: myinfo.name,
-            userid: myinfo.userid
-          };
-          self.setData({
-            first_open: false,
-            chosen: {...chosen},
-            myinfo: {...myinfo}
-          });
-        },
-        fail: (res)=>{
-          console.log(res);
-          dd.alert({content: res.errorMessage});
-        }
-      });
-      
+      this.initData();
     }
   },
   onCodeInput(e){
@@ -246,5 +247,22 @@ Page({
       delta: 1
     });
   },
-  //TODO 提交(时间检查,cofirm,)
+  onReload(){
+    let self = this;
+    dd.confirm({
+      title: '提示',
+      content: '确认重置作业人员?',
+      confirmButtonText: '确认',
+      cancelButtonText: '取消',
+      success: (result) => {
+        if(result.confirm == false){
+          return;
+        }
+        self.setData({
+          chosen:{},
+        });
+        self.initData();
+      },
+    });
+  }
 });
