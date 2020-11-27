@@ -146,18 +146,21 @@ Page({
       currentDate: self.data.common_start,
       success: (res) => {
         console.log(res);
-        if(e.target.dataset.id == undefined){
-          self.setData({
-            common_start : res.date,
+        //如果修改的是本人,同时修改主页的时间
+        if(e.target.dataset.id == self.data.myinfo.userid){
+          let pages = getCurrentPages();
+          let prev_page = pages[pages.length - 2];
+          let section = [...prev_page.data.section];
+          section[self.data.section_id]['start'] = res.date;
+          prev_page.setData({
+            section:section
           });
         }
-        else{
-          let chosen = self.data.chosen;
-          chosen[e.target.dataset.id].start = res.date;
-          self.setData({
-            chosen:chosen
-          });
-        }
+        let chosen = self.data.chosen;
+        chosen[e.target.dataset.id].start = res.date;
+        self.setData({
+          chosen:chosen
+        });
       },
     });
   },
@@ -169,18 +172,21 @@ Page({
       currentDate: self.data.common_end,
       success: (res) => {
         console.log(res);
-        if(e.target.dataset.id == undefined){
-          self.setData({
-            common_end : res.date,
+        //如果修改的是本人,同时修改主页的时间
+        if(e.target.dataset.id == self.data.myinfo.userid){
+          let pages = getCurrentPages();
+          let prev_page = pages[pages.length - 2];
+          let section = [...prev_page.data.section];
+          section[self.data.section_id]['end'] = res.date;
+          prev_page.setData({
+            section:section
           });
         }
-        else{
-          let chosen = self.data.chosen;
-          chosen[e.target.dataset.id].end = res.date;
-          self.setData({
-            chosen:chosen
-          });
-        }
+        let chosen = self.data.chosen;
+        chosen[e.target.dataset.id].end = res.date;
+        self.setData({
+          chosen:chosen
+        });
       },
     });
   },
@@ -235,10 +241,10 @@ Page({
     let pages = getCurrentPages();
     let prev_page = pages[pages.length - 2];
     let section = [...prev_page.data.section];
-    console.log(prev_page.data.section);
-    console.log(pages);
-    console.log(this.data.section_id);
-    console.log(section);
+    // console.log(prev_page.data.section);
+    // console.log(pages);
+    // console.log(this.data.section_id);
+    // console.log(section);
     section[this.data.section_id]['detail'] = {...this.data};
     prev_page.setData({
       section:section
@@ -266,3 +272,7 @@ Page({
     });
   }
 });
+
+//TODO
+//现有BUG:report页面与construction页面对于报送人的时间段不能统一.
+//解决方案:重新设计report页面与construction页面的数据结构与交互

@@ -147,8 +147,16 @@ Page({
         if(result.confirm == false){
           return;
         }
-        //TODO 校验
         let self = this;
+        //TODO 校验
+        for(let i = 0; i < self.data.section.length; i++){
+          if(self.data.section[i].work == '项目施工' && self.data.section[i].detail.confirm != true){
+            dd.alert({content: '当所选内容为[项目施工]时,请在[明细]中确认项目号'});
+            //console.log(self.data.section);
+            return;
+          }
+        }
+        
         dd.httpRequest({
           headers: {
             "Content-Type": "application/json"

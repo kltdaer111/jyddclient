@@ -10,17 +10,17 @@
     <view class="page-section-btns">
       <radio-group name="radio-group" onChange="radioChange" data-id="{{index}}">
         <view class="form-row">
-          <label><radio value="项目竞标"/>项目竞标</label>
+          <label><radio value="项目竞标"/>项目竞标(包括投标以及为赢得订单所做的一切准备工作)</label>
         </view>
         <view class="form-row">
-          <label><radio value="项目施工"/>项目施工</label>
+          <label><radio value="项目施工"/>项目施工(包括获得订单后的现场确认、材料准备)</label>
           <button size="mini" onTap="onConsDetail" data-id="{{index}}" disabled="{{!item.cons_checked}}">明细</button>
         </view>
         <view class="form-row">
           <label><radio value="工作总结、环境整理"/>工作总结、环境整理</label>
         </view>
         <view class="form-row">
-          <label><radio value="公司其它安排(培训、学习、考试等)"/>公司其它安排(培训、学习、考试等)</label>
+          <label><radio value="公司其它安排"/>公司其它安排(培训、学习、考试等)</label>
         </view>
       </radio-group>
     </view>
