@@ -1,73 +1,72 @@
 const moment = require('moment');
 
-//TODO 修改时间的统一
-
-const PLACE_HOLDER = '请输入6位数字';
+const PLACE_HOLDER = '如果不知道请联系项目经理';
 
 Page({
   data: {
+    //项目号
     pcode: '',
+    //项目号输入栏中的填写值
     value: '',
+    //项目号是否确认
     confirm: false,
-    common_duration: '',
-    common_start: '',
-    common_end: '',
+    //每一段工作内容为一个section
     section_id: 0,
+    //项目号输入栏的提示文字
     place_holder: PLACE_HOLDER,
-    first_open: true,
+    //所选员工的工作情况
     chosen: {},
-    myinfo: {},
   },
-  initData(){
-    let self = this;
-    dd.getStorage({
-      key: 'myinfo',
-      success: function(res){
-        let myinfo = res.data;
-        let chosen = {};
-        chosen[myinfo.userid] = {
-          start: self.data.common_start,
-          end: self.data.common_end,
-          name: myinfo.name,
-          userid: myinfo.userid
-        };
-        self.setData({
-          first_open: false,
-          chosen: {...chosen},
-          myinfo: {...myinfo}
-        });
-      },
-      fail: (res)=>{
-        console.log(res);
-        dd.alert({content: res.errorMessage});
-      }
+  getMyinfo(){
+    let pages = getCurrentPages();
+    let prev_page = pages[pages.length - 2];
+    let myinfo = prev_page.data.myinfo;
+    return {...myinfo};
+  },
+  getSectionData(section_id){
+    let pages = getCurrentPages();
+    let prev_page = pages[pages.length - 2];
+    let section_data = prev_page.data.section[section_id];
+    return {...section_data};
+  },
+  saveSectionData(getSectionData, section_id){
+    let pages = getCurrentPages();
+    let prev_page = pages[pages.length - 2];
+    let section = {...prev_page.data.section};
+    section[section_id] = getSectionData;
+    prev_page.setData({
+      section : section
     });
   },
   onLoad(query){
-    let written = JSON.parse(query.obj);
-    console.log(written);
-    this.setData({
-      section_id: written.detail.section_id,
-      common_start: written.start,
-      common_end: written.end,
-    });
-    if(written.detail.first_open == false){
-      console.log(written);
-      this.setData({
-        pcode: written.detail.pcode,
-        confirm: written.detail.confirm,
-        chosen: {...written.detail.chosen},
-        first_open: written.detail.first_open,
-        value: written.detail.pcode,
-        myinfo: {...written.myinfo}
-      });
-    }else{
-      // let today = moment().format('YYYY-MM-DD');
-      // let common_start = today + ' 08:00';
-      // let common_end = today + ' 17:00';
-      //将自己作为已选择的作业人员
-      this.initData();
+    this.initData(query.section_id);
+    
+  },
+  initData(section_id){
+    let section_data = this.getSectionData(section_id);
+    let cons_data = section_data.cons;
+    //初始化
+    if(cons_data == undefined){
+      cons_data = {};
+      cons_data.pcode = '';
+      cons_data.value = '';
+      cons_data.confirm = false;
+      cons_data.chosen = {};
+      let myinfo = this.getMyinfo();
+      cons_data.chosen[myinfo.userid] = {
+        start : section_data.start,
+        end : section_data.end,
+        name : myinfo.name,
+        userid : myinfo.userid
+      }
     }
+    this.setData({
+      section_id: section_id,
+      pcode: cons_data.pcode,
+      value: cons_data.value,
+      confirm: cons_data.confirm,
+      chosen: cons_data.chosen
+    });
   },
   onCodeInput(e){
     console.log(e.detail.value);
@@ -147,15 +146,15 @@ Page({
       success: (res) => {
         console.log(res);
         //如果修改的是本人,同时修改主页的时间
-        if(e.target.dataset.id == self.data.myinfo.userid){
-          let pages = getCurrentPages();
-          let prev_page = pages[pages.length - 2];
-          let section = [...prev_page.data.section];
-          section[self.data.section_id]['start'] = res.date;
-          prev_page.setData({
-            section:section
-          });
-        }
+        // if(e.target.dataset.id == self.data.myinfo.userid){
+        //   let pages = getCurrentPages();
+        //   let prev_page = pages[pages.length - 2];
+        //   let section = [...prev_page.data.section];
+        //   section[self.data.section_id]['start'] = res.date;
+        //   prev_page.setData({
+        //     section:section
+        //   });
+        // }
         let chosen = self.data.chosen;
         chosen[e.target.dataset.id].start = res.date;
         self.setData({
@@ -173,15 +172,15 @@ Page({
       success: (res) => {
         console.log(res);
         //如果修改的是本人,同时修改主页的时间
-        if(e.target.dataset.id == self.data.myinfo.userid){
-          let pages = getCurrentPages();
-          let prev_page = pages[pages.length - 2];
-          let section = [...prev_page.data.section];
-          section[self.data.section_id]['end'] = res.date;
-          prev_page.setData({
-            section:section
-          });
-        }
+        // if(e.target.dataset.id == self.data.myinfo.userid){
+        //   let pages = getCurrentPages();
+        //   let prev_page = pages[pages.length - 2];
+        //   let section = [...prev_page.data.section];
+        //   section[self.data.section_id]['end'] = res.date;
+        //   prev_page.setData({
+        //     section:section
+        //   });
+        // }
         let chosen = self.data.chosen;
         chosen[e.target.dataset.id].end = res.date;
         self.setData({
@@ -238,17 +237,32 @@ Page({
     });
   },
   onBack(){
-    let pages = getCurrentPages();
-    let prev_page = pages[pages.length - 2];
-    let section = [...prev_page.data.section];
-    // console.log(prev_page.data.section);
-    // console.log(pages);
-    // console.log(this.data.section_id);
-    // console.log(section);
-    section[this.data.section_id]['detail'] = {...this.data};
-    prev_page.setData({
-      section:section
-    });
+    // let pages = getCurrentPages();
+    // let prev_page = pages[pages.length - 2];
+    // let section = [...prev_page.data.section];
+    // // console.log(prev_page.data.section);
+    // // console.log(pages);
+    // // console.log(this.data.section_id);
+    // // console.log(section);
+    // section[this.data.section_id]['detail'] = {...this.data};
+    // prev_page.setData({
+    //   section:section
+    // });
+
+
+    let section_data = this.getSectionData(this.data.section_id);
+    if(section_data.cons == undefined){
+      section_data.cons = {};
+    }
+    section_data.cons.pcode = this.data.pcode;
+    section_data.cons.value = this.data.value;
+    section_data.cons.confirm = this.data.confirm;
+    section_data.cons.chosen = {...this.data.chosen};
+    //同步主页与本业的主人时间
+    let my_info = this.getMyinfo();
+    section_data.start = section_data.cons.chosen[my_info.userid].start;
+    section_data.end = section_data.cons.chosen[my_info.userid].end;
+    this.saveSectionData(section_data);
     dd.navigateBack({
       delta: 1
     });
@@ -264,9 +278,9 @@ Page({
         if(result.confirm == false){
           return;
         }
-        self.setData({
-          chosen:{},
-        });
+        let section_data = self.getSectionData(self.data.section_id);
+        section_data.cons = undefined;
+        self.saveSectionData(section_data);
         self.initData();
       },
     });

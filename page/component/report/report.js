@@ -2,11 +2,41 @@ const moment = require('moment');
 
 Page({
   data: {
+    //是否已提交
     commit: false,
+    //默认工作持续时间
     common_duration: '',
+    //默认工作开始时间
     common_start: '',
+    //默认工作结束时间
     common_end: '',
-    section: [],
+    //每一段工作内容为一个construction的data,各个data组成了一个section
+    /*
+    @section结构
+    id : int
+    data : obj
+    
+    @data结构
+    start : string, 工作开始时间
+    end : string, 工作结束时间
+    work : string, 工作内容
+    cons : obj, [明细]中的内容
+
+    @cons结构
+    pcode : string, 项目号
+    value : string, 项目号输入栏中的实际填写值
+    confirm : bool, 项目号是否确认
+    section_id : int, 该cons所属的data在section数组中的序号
+    chosen : obj组成的array, 所选员工的工作情况
+
+    @chosen中obj的结构
+    userid : string, 钉钉userid
+    name : string
+    start : string, 工作开始时间
+    end : string, 工作结束时间
+    */
+    section: {},
+    //app使用者的自身信息
     myinfo: {},
   },
   onLoad(){
@@ -103,7 +133,7 @@ Page({
     console.log(e);
     
     dd.navigateTo({
-      url: './construction?obj=' + JSON.stringify(this.data.section[e.target.dataset.id]),
+      url: './construction?section_id=' + e.target.dataset.id,
     })
   },
   onAddSection(e){
