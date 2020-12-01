@@ -29,11 +29,11 @@ Page({
     let section_data = prev_page.data.section[section_id];
     return {...section_data};
   },
-  saveSectionData(getSectionData, section_id){
+  saveSectionData(data, section_id){
     let pages = getCurrentPages();
     let prev_page = pages[pages.length - 2];
-    let section = {...prev_page.data.section};
-    section[section_id] = getSectionData;
+    let section = [...prev_page.data.section];
+    section[section_id] = data;
     prev_page.setData({
       section : section
     });
@@ -42,11 +42,11 @@ Page({
     this.initData(query.section_id);
     
   },
-  initData(section_id){
+  initData(section_id, clear = false){
     let section_data = this.getSectionData(section_id);
     let cons_data = section_data.cons;
     //初始化
-    if(cons_data == undefined){
+    if(cons_data == undefined || clear == true){
       cons_data = {};
       cons_data.pcode = '';
       cons_data.value = '';
@@ -71,7 +71,8 @@ Page({
   onCodeInput(e){
     console.log(e.detail.value);
     this.setData({
-      pcode : e.detail.value
+      pcode : e.detail.value,
+      value : e.detail.value
     });
   },
   onCodeConfirm(){
@@ -142,7 +143,7 @@ Page({
     let self = this;
     dd.datePicker({
       format: 'yyyy-MM-dd HH:mm',
-      currentDate: self.data.common_start,
+      //currentDate: self.data.common_start,
       success: (res) => {
         console.log(res);
         //如果修改的是本人,同时修改主页的时间
@@ -168,7 +169,7 @@ Page({
     let self = this;
     dd.datePicker({
       format: 'yyyy-MM-dd HH:mm',
-      currentDate: self.data.common_end,
+      //currentDate: self.data.common_end,
       success: (res) => {
         console.log(res);
         //如果修改的是本人,同时修改主页的时间
@@ -195,6 +196,10 @@ Page({
     for(let i in self.data.chosen){
      requiredUsers.push(i);
     }
+    let myuserid = self.getMyinfo().userid;
+    let start = this.data.chosen[myuserid].start;
+    let end = this.data.chosen[myuserid].end;
+    console.log(myuserid);
     dd.complexChoose({
       title:"选取作业人员",            //标题
       multiple:true,            //是否多选
@@ -209,19 +214,20 @@ Page({
       permissionType:"GLOBAL",          //可添加权限校验，选人权限，目前只有GLOBAL这个参数
       responseUserOnly:true,    
       success: (res)=>{
-        console.log('complexChoose success');
-        console.log(res);
+        //console.log('complexChoose success');
+        //console.log(res);
         let tmp = {...self.data.chosen};
-        console.log(res.users.length);
+        //console.log(res.users.length);
+        
         for(let i=0;i< res.users.length;i++){
           let name = res.users[i].name;
           let userid = res.users[i].userId;
-          console.log(name);
+          //console.log(name);
           tmp[userid] = {
             name:name,
             userid:userid,
-            start:self.data.common_start,
-            end:self.data.common_end,
+            start:start,
+            end:end,
           };
         }
         self.setData({
@@ -262,7 +268,7 @@ Page({
     let my_info = this.getMyinfo();
     section_data.start = section_data.cons.chosen[my_info.userid].start;
     section_data.end = section_data.cons.chosen[my_info.userid].end;
-    this.saveSectionData(section_data);
+    this.saveSectionData(section_data, this.data.section_id);
     dd.navigateBack({
       delta: 1
     });
@@ -278,10 +284,10 @@ Page({
         if(result.confirm == false){
           return;
         }
-        let section_data = self.getSectionData(self.data.section_id);
-        section_data.cons = undefined;
-        self.saveSectionData(section_data);
-        self.initData();
+        //let section_data = self.getSectionData(self.data.section_id);
+        //section_data.cons = undefined;
+        //self.saveSectionData(section_data);
+        self.initData(self.data.section_id, true);
       },
     });
   }

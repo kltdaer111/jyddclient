@@ -35,21 +35,11 @@ Page({
     start : string, 工作开始时间
     end : string, 工作结束时间
     */
-    section: {},
+    section: [],
     //app使用者的自身信息
     myinfo: {},
   },
   onLoad(){
-    // dd.getAuthCode({
-    //   success:function(res){
-    //       /*{
-    //           authCode: 'hYLK98jkf0m' //string authCode
-    //       }*/
-    //       console.log(res);
-    //   },
-    //   fail:function(err){
-    //   }
-    // });
     let today = moment().format('YYYY-MM-DD');
     let common_start = today + ' 08:00';
     let common_end = today + ' 17:00';
@@ -71,11 +61,6 @@ Page({
     tmp.push({
       start: common_start,
       end: common_end,
-      cons_checked: false,
-      detail: {
-        section_id: 0,
-        first_open: true,
-      }
     });
     this.setData({
       common_start: common_start,
@@ -92,7 +77,7 @@ Page({
       currentDate: self.data.common_start,
       success: (res) => {
         console.log(res);
-        let tmp = [...this.data.section];
+        let tmp = [...self.data.section];
         tmp[e.target.dataset.id].start = res.date;
         self.setData({
           section: tmp
@@ -108,7 +93,7 @@ Page({
       currentDate: self.data.common_end,
       success: (res) => {
         console.log(res);
-        let tmp = [...this.data.section];
+        let tmp = [...self.data.section];
         tmp[e.target.dataset.id].end = res.date
         self.setData({
           section: tmp
@@ -121,9 +106,9 @@ Page({
     let tmp = [...this.data.section];
     tmp[e.target.dataset.id]['work'] = e.detail.value;
     if(e.detail.value == '项目施工'){
-      tmp[e.target.dataset.id]['cons_checked'] = true;
+      tmp[e.target.dataset.id]['cons_selected'] = true;
     }else{
-      tmp[e.target.dataset.id]['cons_checked'] = false;
+      tmp[e.target.dataset.id]['cons_selected'] = false;
     }
     this.setData({
       section: tmp,
@@ -149,15 +134,9 @@ Page({
         }
         console.log(e);
         let tmp = [...self.data.section];
-        let index = tmp.length;
         tmp.push({
           start: self.data.common_start,
           end: self.data.common_end,
-          cons_checked: false,
-          detail: {
-            section_id: index,
-            first_open: true,
-          }
         });
         self.setData({
           section:tmp
@@ -180,7 +159,7 @@ Page({
         let self = this;
         //TODO 校验
         for(let i = 0; i < self.data.section.length; i++){
-          if(self.data.section[i].work == '项目施工' && self.data.section[i].detail.confirm != true){
+          if(self.data.section[i].work == '项目施工' && (self.data.section[i].cons == undefined || self.data.section[i].cons.confirm != true)){
             dd.alert({content: '当所选内容为[项目施工]时,请在[明细]中确认项目号'});
             //console.log(self.data.section);
             return;

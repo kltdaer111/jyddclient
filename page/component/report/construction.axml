@@ -4,7 +4,7 @@
     <view class="form-row">
       <view class="form-row-label">项目号</view>
       <view class="form-row-content">
-        <input class="input" disabled="{{cons_data.confirm}}" onInput="onCodeInput" placeholder="{{place_holder}}" value="{{cons_data.value}}"></input>
+        <input class="input" disabled="{{confirm}}" onInput="onCodeInput" placeholder="{{place_holder}}" value="{{value}}"></input>
       </view>
     </view>
     <view class="page-section-btns">

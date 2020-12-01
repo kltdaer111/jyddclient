@@ -14,7 +14,7 @@
         </view>
         <view class="form-row">
           <label><radio value="项目施工"/>项目施工(包括获得订单后的现场确认、材料准备)</label>
-          <button size="mini" onTap="onConsDetail" data-id="{{index}}" disabled="{{!item.cons_checked}}">明细</button>
+          <button size="mini" onTap="onConsDetail" data-id="{{index}}" disabled="{{!item.cons_selected}}">明细</button>
         </view>
         <view class="form-row">
           <label><radio value="工作总结、环境整理"/>工作总结、环境整理</label>
