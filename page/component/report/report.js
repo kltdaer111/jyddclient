@@ -207,7 +207,19 @@ Page({
           },
           fail: function(res) {
             console.log(res);
-            dd.alert({content: '提交失败,请检查网络'});
+            switch(res.status){
+              case(450):{
+                dd.alert({content: '你所选择的人员中,有人尚未分配工号,请联系管理员处理'});
+              };
+              break;
+              case(451):{
+                dd.alert({content: '你已经提交过' + res.data.res + '的工作日志了'});
+              }
+              break;
+              default:{
+                dd.alert({content: '提交失败,请检查网络'});
+              }
+            }
           },
           // complete: function(res) {
           //   console.log(res);

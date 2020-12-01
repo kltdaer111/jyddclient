@@ -3,8 +3,8 @@
   <view class="page-section">
     <view class="page-section-title">时间段: {{item.start}} 至 {{item.end}}</view>
     <view class="page-section-btns">
-      <button size="mini" type="primary" data-id="{{index}}" onTap="onChooseStartTime">修改开始时间</button>
-      <button size="mini" type="primary" data-id="{{index}}" onTap="onChooseEndTime">修改结束时间</button>
+      <button size="mini" type="primary" data-id="{{index}}" disabled="{{item.cons_selected}}" onTap="onChooseStartTime">修改开始时间</button>
+      <button size="mini" type="primary" data-id="{{index}}" disabled="{{item.cons_selected}}" onTap="onChooseEndTime">修改结束时间</button>
     </view>
     <view class="page-section-title">工作内容</view>
     <view class="page-section-btns">

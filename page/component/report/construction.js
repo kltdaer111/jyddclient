@@ -1,6 +1,6 @@
 const moment = require('moment');
 
-const PLACE_HOLDER = '如果不知道请联系项目经理';
+const PLACE_HOLDER = '不清楚请联系项目经理';
 
 Page({
   data: {
