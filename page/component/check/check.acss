@@ -1,0 +1,59 @@
+.toptip {
+    font-size: 34rpx;
+    color: #aaa;
+}
+
+.box1 .dateBox {
+    width: 100%;
+    height: 60rpx;
+    line-height: 60rpx;
+    text-align: center;
+    margin-top: 40rpx;
+    font-size: 50rpx;
+    color: #282828;
+}
+
+.box1 {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 auto;
+}
+
+.box1>view {
+    text-align: center;
+    font-size: 34rpx;
+}
+
+.isrela {
+    position: relative;
+}
+
+.weeklist {
+    display: flex;
+    justify-content: space-around;
+    font-weight: bold;
+    border-bottom: 1rpx solid #d0d0d0;
+    color: #333;
+}
+
+.dateOn {
+    position: absolute;
+    bottom: 10rpx;
+    left: 50%;
+    width: 10rpx;
+    height: 10rpx;
+    margin-left: -3rpx;
+    border-radius: 50%;
+    background-color: blue;
+}
+
+.isbook {
+    box-sizing: border-box;
+    color: #3777b1;
+    background-color: #9cbbd1;
+    border: 1rpx solid #fff;
+}
+
+.nobook {
+    color: #555;
+}

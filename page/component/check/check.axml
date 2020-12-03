@@ -1,0 +1,33 @@
+<view class="page">
+  <view class="pv-container">
+    <picker-view onChange="onChange">
+      <picker-view-column>
+        <view a:for="{{workers}}" data-id="{{index}}" >{{item.name}}</view>
+      </picker-view-column>
+    </picker-view>
+  </view>
+  <view class='box1' style='width: {{ sysW * 7 }}rpx'>
+    <view class='dateBox' onTap="onTapDate">{{ year }} 年 {{ month}} 月
+    </view>
+    <view class="weeklist">
+        <block a:for='{{ weekArr }}'>
+            <view key="{{item}}" style='width: {{ sysW }}rpx; height: {{ sysW }}rpx; line-height: {{ sysW }}rpx;'>
+                {{ item }}
+            </view>
+        </block>
+    </view>
+    <view class="daylist">
+    </view>
+    <block a:for='{{ arr }}'>
+        <view class="isrela" key="{{item}}">
+            <view
+                style='{{ index == 0 ? "margin-left:" + sysW * marLet + "rpx;" : "" }}width: {{ sysW }}rpx; height: {{ sysW }}rpx; line-height: {{ sysW }}rpx;'
+                class='{{ item.isbook?"isbook":"nobook"}}'>{{ item.day }}
+            </view>
+            <view class='{{item.day == current_day &&  current_yearmonth == current_choose ? "dateOn" : "" }}'>
+            </view>
+        </view>
+    </block>
+  </view>
+  
+</view>

@@ -1,0 +1,10 @@
+<view class="page">
+<block a:for="{{staff}}">
+<view class="page-section-title">{{item.name}}: {{item.start}} 至 {{item.end}}</view>
+<view class="page-section-btns">
+  <button size="mini" type="primary" data-id="{{index}}" onTap="onChooseStartTime">修改上班时间</button>
+  <button size="mini" type="primary" data-id="{{index}}" onTap="onChooseEndTime">修改下班时间</button>
+  <button size="mini" type="warn" data-id="{{index}}" onTap="onDelete">请假</button>
+</view>
+</block>
+</view>

@@ -183,22 +183,6 @@ Page({
           dataType: 'json',
           success: function(res) {
             console.log(res);
-            // if(res.data == undefined){
-            //   dd.alert({content: '服务器故障'});
-            //   self.setData({
-            //     confirm : false
-            //   });
-            //   return;
-            // }
-            // let data = res.data.res;
-            // //项目号录入错误时的处理
-            // if(data == undefined){
-            //   dd.alert({content: '该项目号不存在,请联系项目经理确认'});
-            //   self.setData({
-            //     confirm : false
-            //   });
-            //   return;
-            // }
             let show = '上传成功';
             dd.alert({content: show});
             self.setData({
@@ -210,10 +194,14 @@ Page({
             switch(res.status){
               case(450):{
                 dd.alert({content: '你所选择的人员中,有人尚未分配工号,请联系管理员处理'});
-              };
+              }
               break;
               case(451):{
                 dd.alert({content: '你已经提交过' + res.data.res + '的工作日志了'});
+              }
+              break;
+              case(452):{
+                dd.alert({content: res.data.res});
               }
               break;
               default:{

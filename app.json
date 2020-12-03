@@ -31,6 +31,8 @@
     "page/component/view/view",
     "page/component/report/report",
     "page/component/report/construction",
+    "page/component/attendance/attendance",
+    "page/component/check/check",
     "page/API/index/index",
     "page/API/share/share",
     "page/API/action-sheet/action-sheet",

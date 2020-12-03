@@ -30,6 +30,18 @@ Page({
           title: '工作日志',
           entitle: 'report',
           page: 'report',
+        },
+        {
+          icon: '/image/api_view.png',
+          title: '查看日志',
+          entitle: 'check',
+          page: 'check',
+        },
+        {
+          icon: '/image/view.png',
+          title: '每日考勤',
+          entitle: 'attendance',
+          page: 'attendance',
         }
       ],
     },
