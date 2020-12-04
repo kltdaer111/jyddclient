@@ -2,7 +2,7 @@
   <view class="pv-container">
     <picker-view onChange="onChange">
       <picker-view-column>
-        <view a:for="{{workers}}" data-id="{{index}}" >{{item.name}}</view>
+        <view a:for="{{workers}}">{{item.name}}</view>
       </picker-view-column>
     </picker-view>
   </view>
@@ -20,12 +20,11 @@
     </view>
     <block a:for='{{ arr }}'>
         <view class="isrela" key="{{item}}">
-            <view
-                style='{{ index == 0 ? "margin-left:" + sysW * marLet + "rpx;" : "" }}width: {{ sysW }}rpx; height: {{ sysW }}rpx; line-height: {{ sysW }}rpx;'
-                class='{{ item.isbook?"isbook":"nobook"}}'>{{ item.day }}
+            <view style='{{ index == 0 ? "margin-left:" + sysW * marLet + "rpx;" : "" }}width: {{ sysW }}rpx; height: {{ sysW }}rpx; line-height: {{ sysW }}rpx;'
+                class='{{ item.isbook?"isbook":"nobook"}}' onTap="onTapDay" data-id="{{item.day}}">
+                {{ item.day }}
             </view>
-            <view class='{{item.day == current_day &&  current_yearmonth == current_choose ? "dateOn" : "" }}'>
-            </view>
+            <view class='{{item.day == current_day &&  current_yearmonth == current_choose ? "dateOn" : "" }}'></view>
         </view>
     </block>
   </view>
