@@ -193,11 +193,12 @@ Page({
     },
     onTapDay(e){
       console.log(e);
+      let self = this;
       if(e.target.dataset.id in this.data.detail){
         console.log(this.data.detail[e.target.dataset.id]);
         let res = this.formatLog(this.data.detail[e.target.dataset.id]);
         dd.alert({
-          content : JSON.stringify(res)
+          content : self.formatOut(res)
         });
       }
     },
@@ -240,5 +241,18 @@ Page({
       }
       return res;
       console.log(res);
+    },
+    formatOut(formatObjLog){
+      let res = '';
+      let i = 1;
+      for(let title in formatObjLog){
+        res += '工作内容' + i + '\n' + title + ':\n'
+        for(let sub_title in formatObjLog[title]){
+          res += sub_title + ':' + JSON.stringify(formatObjLog[title][sub_title]) + '\n';
+        }
+        i++;
+        res += '\n';
+      }
+      return res;
     }
 });
